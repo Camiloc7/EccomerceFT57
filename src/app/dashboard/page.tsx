@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image"; // Importamos Image de Next.js
 import { useAuth } from "@/context/AuthContext"; // Importamos el contexto de autenticación
 
 interface IOrder {
@@ -78,7 +79,6 @@ export default function Dashboard() {
     <div className="container mx-auto px-4 mt-8">
       <h2 className="text-3xl font-bold mb-8 text-center text-blue-600">Mis Pedidos</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Renderizamos los pedidos como tarjetas */}
         {orders.map((order) => (
           <div
             key={order.id}
@@ -99,10 +99,13 @@ export default function Dashboard() {
             <div className="flex flex-col space-y-4">
               {order.products.map((product, index) => (
                 <div key={index} className="flex items-center justify-between">
-                  <img
+                  <Image
                     src={product.image}
                     alt={product.name}
-                    className="w-12 h-12 object-contain rounded-md"
+                    width={50}  
+                    height={50} 
+                    quality={100}
+                    className="object-contain rounded-md"
                   />
                   <div className="ml-4 flex-1">
                     <p className="text-lg font-semibold text-gray-800">{product.name}</p>

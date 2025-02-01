@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext"; 
 import { useRouter } from "next/navigation";
@@ -23,7 +21,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null);
+    setError(null); // Reseteamos el error en cada intento
 
     try {
       await login(formData.email, formData.password, () => {
@@ -33,10 +31,15 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           router.push("/dashboard"); 
         }
       });
-    } catch (error) {
-      setError("Error al iniciar sesión. Intenta nuevamente.");
+    } catch (err) {
+      // Aquí manejamos el error de manera explícita
+      if (err instanceof Error) {
+        setError(err.message); // Si el error es una instancia de Error, mostramos el mensaje
+      } else {
+        setError("Error al iniciar sesión. Intenta nuevamente.");
+      }
     } finally {
-      setLoading(false);
+      setLoading(false); // Siempre reseteamos el estado de carga
     }
   };
 
@@ -98,6 +101,6 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           </p>
         </div>
       </div>
-  </form>
+    </form>
   );
 }
