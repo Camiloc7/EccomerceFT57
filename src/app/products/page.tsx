@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "@/components/ProductCard";
@@ -42,8 +40,9 @@ export default function Products() {
               product.categoryId,
               getCategoryName(product.categoryId),
             ])
-          )
+          ) as Map<number, string> // Especificamos el tipo Map<number, string>
         ).map(([id, name]) => ({ id, name }));
+
         setCategories(uniqueCategories);
       } catch (error) {
         console.error("Error fetching data:", error);
