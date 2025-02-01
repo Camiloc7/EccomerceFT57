@@ -2,17 +2,16 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";  
+import { CartItem } from "@/types";  // Importamos la interfaz desde types
 
 export default function Cart() {
   const { isLoggedIn, token } = useAuth();
-  const [cartItems, setCartItems] = useState<any[]>([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
 
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart") || "[]");
+    const savedCart: CartItem[] = JSON.parse(localStorage.getItem("cart") || "[]");
     setCartItems(savedCart);
   }, []);
-
-
 
   const checkout = async () => {
     if (!isLoggedIn) {
@@ -20,15 +19,14 @@ export default function Cart() {
       return;
     }
   
-    // Filtramos productos duplicados en el carrito
-    const uniqueProducts = Array.from(new Set(cartItems.map((item: any) => item.id)))
-      .map((id) => cartItems.find((item: any) => item.id === id));
+    // Filtramos productos duplicados
+    const uniqueProducts: CartItem[] = Array.from(new Set(cartItems.map((item) => item.id)))
+      .map((id) => cartItems.find((item) => item.id === id) as CartItem);
   
     const orderData = {
-      products: uniqueProducts.map((item: any) => item.id),  // Enviamos solo los IDs de los productos
+      products: uniqueProducts.map((item) => item.id),
     };
   
-    // Verificamos que los datos que vamos a enviar sean correctos
     console.log("Order Data:", orderData);
   
     try {
@@ -37,35 +35,25 @@ export default function Cart() {
         orderData,
         {
           headers: {
-            Authorization: token,  // El token debe ser un Bearer Token válido
+            Authorization: token,
           },
         }
       );
   
-      // Mostramos la respuesta de la API
       console.log("Respuesta de la API:", response);
-  
       alert("Orden enviada con éxito.");
-      localStorage.removeItem("cart");  // Limpiar el carrito después de la compra
-      setCartItems([]);  // Limpiar los productos del carrito en el estado
-    } catch (error: any) {
-      if (error.response) {
-        // Error de la respuesta de la API
+      localStorage.removeItem("cart");
+      setCartItems([]);
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error) && error.response) {
         console.error("Error al realizar la compra, respuesta de la API:", error.response);
         alert(`Error al realizar la compra: ${error.response.data.message || "Intenta nuevamente."}`);
-      } else if (error.request) {
-        // Error de la solicitud (sin respuesta de la API)
-        console.error("Error de la solicitud:", error.request);
-        alert("Hubo un problema con la solicitud, intentalo nuevamente.");
       } else {
-        // Error inesperado
-        console.error("Error inesperado:", error.message);
+        console.error("Error inesperado:", error);
         alert("Hubo un problema inesperado al realizar la compra.");
       }
     }
   };
-  
-  
 
   return (
     <div className="container mx-auto px-4 mt-8">
@@ -75,7 +63,7 @@ export default function Cart() {
       ) : (
         <div>
           <ul>
-            {cartItems.map((item: any, index) => (
+            {cartItems.map((item, index) => (
               <li key={index} className="flex justify-between items-center py-2">
                 <span>{item.name}</span>
                 <span>${item.price}</span>
