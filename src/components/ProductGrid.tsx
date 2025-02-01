@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "./ProductCard";
 
-
 interface IProduct {
   name: string;
   price: number;
@@ -18,11 +17,15 @@ export default function ProductGrid({ filter }: { filter: string }) {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
 
   useEffect(() => {
+    if (!apiUrl) {
+      console.error("API URL is missing.");
+      return;
+    }
     axios
       .get(`${apiUrl}/products`)
       .then((response) => setProducts(response.data))
       .catch((error) => console.error("Error fetching products:", error));
-  }, []);
+  }, [apiUrl]); // Añadimos `apiUrl` como dependencia
 
   // Filtrando productos
   const filteredProducts = products.filter((product) => 
