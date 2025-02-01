@@ -1,7 +1,10 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useAuth } from "@/context/AuthContext";  // Importar el contexto de autenticación
+import Image from "next/image";
+import { useAuth } from "@/context/AuthContext";
+import { useRouter } from "next/navigation";
 
 interface IProduct {
   id: number;
@@ -14,54 +17,56 @@ interface IProduct {
 }
 
 export default function ProductDetail() {
-  const { isLoggedIn, user } = useAuth();  // Obtener el estado de autenticación
+  const { isLoggedIn } = useAuth();
+  const router = useRouter();
   const [product, setProduct] = useState<IProduct | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [productId, setProductId] = useState<number | null>(null);
 
   useEffect(() => {
-    const urlParts = window.location.pathname.split('/'); 
-    const id = urlParts[urlParts.length - 1]; 
+    // Obtener el ID del producto desde la URL
+    const pathParts = window.location.pathname.split("/");
+    const id = Number(pathParts[pathParts.length - 1]);
 
-    if (id) {
-      setProductId(Number(id)); 
+    if (!isNaN(id)) {
+      setProductId(id);
     }
   }, []);
 
   useEffect(() => {
     if (productId) {
-      const fetchProduct = async () => {
-        try {
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL; 
-          const response = await axios.get(`${apiUrl}/products`); 
-          
-          const product = response.data.find((prod: IProduct) => prod.id === productId);
-          
-          if (product) {
-            setProduct(product); 
-          } else {
-            alert("Producto no encontrado");
-          }
-        } catch (error) {
-          console.error("Error fetching product:", error);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      fetchProduct();
+      fetchProduct(productId);
     }
   }, [productId]);
+
+  const fetchProduct = async (id: number) => {
+    try {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+      const response = await axios.get(`${apiUrl}/products`); // 🔹 Obtiene la lista de productos
+
+      // 🔹 Buscar el producto correcto en la lista
+      const foundProduct = response.data.find((prod: IProduct) => prod.id === id);
+
+      if (foundProduct) {
+        setProduct(foundProduct);
+      } else {
+        alert("Producto no encontrado");
+      }
+    } catch (error) {
+      console.error("Error al obtener el producto:", error);
+      alert("Error al obtener el producto. Inténtalo de nuevo.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const addToCart = () => {
     if (!isLoggedIn) {
       alert("Debes iniciar sesión para añadir productos al carrito.");
-      // Redirigir a la página de login si el usuario no está autenticado
-      window.location.href = "/login";
+      router.push("/login");
       return;
     }
 
-    // Si el usuario está logueado, proceder con añadir al carrito
     const cart = JSON.parse(localStorage.getItem("cart") || "[]");
     cart.push(product);
     localStorage.setItem("cart", JSON.stringify(cart));
@@ -79,9 +84,11 @@ export default function ProductDetail() {
   return (
     <div className="container mx-auto px-4 mt-8">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <img
+        <Image
           src={product.image}
           alt={product.name}
+          width={500}
+          height={500}
           className="w-full h-80 object-contain rounded-md mb-4"
         />
         <div>

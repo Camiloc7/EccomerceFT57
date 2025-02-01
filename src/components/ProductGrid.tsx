@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductCard from "./ProductCard";
-import { useRouter } from "next/router"; 
 
 
 interface IProduct {
