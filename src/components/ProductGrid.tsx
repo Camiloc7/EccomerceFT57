@@ -25,11 +25,10 @@ export default function ProductGrid({ filter }: { filter: string }) {
       .get(`${apiUrl}/products`)
       .then((response) => setProducts(response.data))
       .catch((error) => console.error("Error fetching products:", error));
-  }, [apiUrl]); // Añadimos `apiUrl` como dependencia
+  }, [apiUrl]);
 
-  // Filtrando productos
   const filteredProducts = products.filter((product) => 
-    product.name.toLowerCase().includes(filter) // Compara el filtro con el nombre del producto
+    product.name.toLowerCase().includes(filter) 
   );
 
   return (

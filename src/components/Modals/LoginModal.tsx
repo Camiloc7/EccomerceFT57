@@ -1,7 +1,8 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import LoginForm from "@/components/forms/LoginForm";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 
 interface LoginModalProps {
@@ -12,26 +13,26 @@ interface LoginModalProps {
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   useEffect(() => {
     if (isOpen) {
-      document.body.style.overflow = "hidden"; // Deshabilitar el scroll al abrir el modal
+      document.body.style.overflow = "hidden"; 
     } else {
-      document.body.style.overflow = ""; // Habilitar el scroll al cerrar el modal
+      document.body.style.overflow = ""; 
     }
 
     return () => {
-      document.body.style.overflow = ""; // Limpiar en el desmontaje
+      document.body.style.overflow = ""; 
     };
   }, [isOpen]);
 
-  if (!isOpen) return null; // No renderizar si el modal no está abierto
+  if (!isOpen) return null; 
 
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-      onClick={onClose} // Cerrar el modal cuando se hace clic fuera de él
+      onClick={onClose} 
     >
       <div
         className="bg-white rounded-lg shadow-md p-6 w-full max-w-md relative"
-        onClick={(e) => e.stopPropagation()} // Evitar que se cierre al hacer clic dentro del modal
+        onClick={(e) => e.stopPropagation()} 
       >
         <button
           onClick={onClose}
@@ -40,10 +41,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
         >
           ×
         </button>
-
         <LoginForm onSuccess={onClose} />
-
-
       </div>
     </div>,
     document.body

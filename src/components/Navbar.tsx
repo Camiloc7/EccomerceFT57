@@ -1,9 +1,9 @@
 "use client";
-
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ShoppingCart, User, LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useCart } from "../context/CartContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,15 +13,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "../context/AuthContext";
-import LoginModal from "@/components/Modals/LoginModal"; // Importa el modal de login
+import LoginModal from "@/components/Modals/LoginModal";
 import Modal from "@/components/Modals/Modal";
 import RegisterForm from "@/components/forms/RegisterForm";
 
 export default function Navbar() {
+  const { cart } = useCart(); // Obtienes el carrito
   const { isLoggedIn, user, logout } = useAuth();
   const [loadingUser, setLoadingUser] = useState(true);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false); // Nuevo estado para el modal de login
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -30,6 +31,9 @@ export default function Navbar() {
       setLoadingUser(false);
     }
   }, [isLoggedIn]);
+
+  // Calcular el total de productos en el carrito
+  const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
   return (
     <div className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -51,7 +55,7 @@ export default function Navbar() {
                 Productos
               </Link>
               <Link href="/dashboard" className="text-sm font-medium">
-                Dashboard
+                Mis Pedidos
               </Link>
             </div>
           </SheetContent>
@@ -73,7 +77,7 @@ export default function Navbar() {
               Productos
             </Link>
             <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
-              Dashboard
+            Mis Pedidos
             </Link>
           </div>
         </div>
@@ -81,8 +85,13 @@ export default function Navbar() {
         {/* Right Side Items */}
         <div className="flex items-center gap-4">
           <Link href="/cart">
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="h-5 w-5" />
+              {totalItemsInCart > 0 && (
+                <span className="absolute -top-2 -right-2 text-xs text-white bg-red-600 rounded-full px-2 py-1">
+                  {totalItemsInCart}
+                </span>
+              )}
               <span className="sr-only">Ver carrito</span>
             </Button>
           </Link>
@@ -101,7 +110,7 @@ export default function Navbar() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={() => setIsLoginModalOpen(true)} // Abre el modal de login
+                onClick={() => setIsLoginModalOpen(true)}
               >
                 Iniciar Sesión
               </Button>
@@ -123,7 +132,7 @@ export default function Navbar() {
                   <Link href="/profile">Mi Perfil</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/orders">Mis Pedidos</Link>
+                  <Link href="/dashboard">Mis Pedidos</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={logout}>
@@ -136,16 +145,14 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Modal de Login */}
+      {/* Modales */}
       <LoginModal
         isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)} // Cerrar modal
+        onClose={() => setIsLoginModalOpen(false)}
       />
-
-      {/* Modal para el formulario de registro */}
       <Modal
         isOpen={isRegisterModalOpen}
-        onClose={() => setIsRegisterModalOpen(false)} // Cerrar modal
+        onClose={() => setIsRegisterModalOpen(false)}
       >
         <RegisterForm onSuccess={() => setIsRegisterModalOpen(false)} />
       </Modal>

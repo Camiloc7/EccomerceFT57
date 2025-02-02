@@ -61,9 +61,9 @@ export default function Products() {
       1: "Smartphones",
       2: "Laptops",
       3: "Tablets",
-      4: "Wearables",
+      4: "Relojes",
       5: "Audio",
-      6: "Accesorios",
+      6: "Computadoras",
     };
     return categoryNames[id] || "Otros";
   };
@@ -81,8 +81,7 @@ export default function Products() {
 
   return (
     <div className="flex container mx-auto px-4 mt-8">
-      {/* Sidebar de Categorías */}
-      <aside className="w-64 p-4 bg-gray-100 h-screen sticky top-0 rounded-md shadow">
+      <aside className="bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500  text-white w-64 p-4 h-screen sticky top-0 rounded-md shadow">
         <h2 className="text-lg font-bold mb-4">Categorías</h2>
         <ul className="space-y-2">
           <li>

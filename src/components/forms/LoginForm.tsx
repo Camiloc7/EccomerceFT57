@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { useAuth } from "@/context/AuthContext"; 
+import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
 
 interface LoginFormProps {
-  onSuccess?: () => void; 
+  onSuccess?: () => void;
 }
 
 export default function LoginForm({ onSuccess }: LoginFormProps) {
@@ -31,15 +31,32 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
           router.push("/dashboard"); 
         }
       });
-    } catch (err) {
-      // Aquí manejamos el error de manera explícita
-      if (err instanceof Error) {
-        setError(err.message); // Si el error es una instancia de Error, mostramos el mensaje
+    } catch (err: any) {
+      setLoading(false); // Detenemos el estado de carga si ocurre un error
+
+      if (err.response) {
+        // Aquí revisamos el error específico de la respuesta del backend
+        switch (err.response.status) {
+          case 401:
+            // Error de credenciales incorrectas
+            setError("Correo electrónico o contraseña incorrectos.");
+            break;
+          case 404:
+            // Si el usuario no existe
+            setError("El usuario no existe.");
+            break;
+          case 400:
+            // Si hay un error en la solicitud, como campos vacíos
+            setError("Por favor, complete todos los campos.");
+            break;
+          default:
+            setError("Error al iniciar sesión. Intenta nuevamente.");
+            break;
+        }
       } else {
-        setError("Error al iniciar sesión. Intenta nuevamente.");
+        // Si el error no tiene una respuesta, significa que puede ser un error de conexión o algo inesperado
+        setError("Hubo un problema al conectar con el servidor. Intenta nuevamente.");
       }
-    } finally {
-      setLoading(false); // Siempre reseteamos el estado de carga
     }
   };
 

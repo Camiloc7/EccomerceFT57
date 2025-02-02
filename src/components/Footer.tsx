@@ -1,4 +1,4 @@
-"use client"; // Marca el componente como uno que debe ejecutarse en el cliente
+"use client"; 
 
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
 
 export default function Footer() {
-  const [showInfo, setShowInfo] = useState(false); // Estado para manejar el colapso en pantallas pequeñas
+  const [showInfo, setShowInfo] = useState(false);
 
   return (
     <footer className="bg-gray-900 text-gray-200">
@@ -53,9 +53,8 @@ export default function Footer() {
 
         {/* Contenido del footer */}
         <div
-          className={`${
-            showInfo ? "block" : "hidden"
-          } md:block`} /* Siempre visible en pantallas grandes */
+          className={`${showInfo ? "block" : "hidden"
+            } md:block`} 
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
             {/* Acerca de */}
@@ -67,17 +66,29 @@ export default function Footer() {
               </p>
             </div>
 
-            {/* Links útiles */}
             <div>
               <h2 className="text-lg font-bold text-white mb-4">Links útiles</h2>
               <ul className="space-y-2 text-sm">
-                {["Cómo comprar", "Términos y condiciones", "Política de privacidad", "Soporte"].map((item) => (
-                  <li key={item}>
-                    <Link href={`/${item.toLowerCase().replace(/\s+/g, "-")}`} className="hover:underline">
-                      {item}
-                    </Link>
-                  </li>
-                ))}
+                <div>
+                  <Link href="/como-comprar" className="hover:underline">
+                    Cómo comprar
+                  </Link>
+                </div>
+                <li>
+                  <Link href="/terms" className="hover:underline">
+                    Términos y condiciones
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/politica-privacidad" className="hover:underline">
+                    Política de privacidad
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/soporte" className="hover:underline">
+                    Soporte
+                  </Link>
+                </li>
               </ul>
             </div>
 
