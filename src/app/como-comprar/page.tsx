@@ -14,7 +14,7 @@ export default function ComoComprar() {
 
         <h2 className="text-2xl font-semibold text-gray-700 mt-8">2. Añade productos al carrito</h2>
         <p className="mt-4 text-lg text-gray-600">
-          Cuando encuentres el producto que te gusta, simplemente haz clic en el botón "Añadir al carrito". Puedes seguir navegando y agregar más artículos si lo deseas.
+          Cuando encuentres el producto que te gusta, simplemente haz clic en el botón &quot;Añadir al carrito&quot;. Puedes seguir navegando y agregar más artículos si lo deseas.
         </p>
 
         <h2 className="text-2xl font-semibold text-gray-700 mt-8">3. Revisa tu carrito</h2>
@@ -34,7 +34,7 @@ export default function ComoComprar() {
 
         <h2 className="text-2xl font-semibold text-gray-700 mt-8">6. Confirma tu compra</h2>
         <p className="mt-4 text-lg text-gray-600">
-          Antes de finalizar, revisa los productos en tu carrito, la dirección de envío y el método de pago. Si todo está correcto, haz clic en "Confirmar Compra".
+          Antes de finalizar, revisa los productos en tu carrito, la dirección de envío y el método de pago. Si todo está correcto, haz clic en &quot;Confirmar Compra&quot;.
         </p>
 
         <h2 className="text-2xl font-semibold text-gray-700 mt-8">7. ¡Listo! Tu pedido está en proceso</h2>
