@@ -4,18 +4,19 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import { useCart } from "@/context/CartContext"; // Importamos el contexto del carrito
+import { useCart } from "@/context/CartContext"; 
+import Image from "next/image";
 
 export default function Cart() {
   const { isLoggedIn, token } = useAuth();
-  const { cart, clearCart, total } = useCart(); // Obtenemos el carrito desde el contexto
+  const { cart, clearCart, total } = useCart(); 
   const router = useRouter();
 
   // Redirigir si el carrito está vacío
   useEffect(() => {
     if (cart.length === 0 && window.location.pathname !== "/products") {
       setTimeout(() => {
-        router.push("/products"); // Redirige después de 2 segundos si el carrito está vacío
+        router.push("/products"); 
       }, 2000);
     }
   }, [cart, router]);
@@ -31,32 +32,31 @@ export default function Cart() {
     const uniqueProducts = Array.from(new Set(cart.map((item) => item.id)))
       .map((id) => cart.find((item) => item.id === id));
 
-      const orderData = {
-        products: uniqueProducts
-          .map((item) => item && item.id)  // Aseguramos que item no sea undefined
-          .filter((id) => id !== undefined), // Filtramos cualquier id que sea undefined
-      };
-      
+    const orderData = {
+      products: uniqueProducts
+        .map((item) => item?.id)  // Usa opcional chaining para evitar undefined
+        .filter((id): id is number => id !== undefined), // Filtra correctamente los valores
+    };
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/orders`,
         orderData,
         {
           headers: {
-            Authorization: token, // El token debe ser un Bearer Token válido
+            Authorization: token, 
           },
         }
       );
 
       alert("Orden enviada con éxito.");
-      clearCart(); // Limpiar el carrito después de la compra
-    } catch (error: any) {
-      if (error.response) {
+      clearCart(); 
+    } catch (error: unknown) {
+      if (axios.isAxiosError(error)) {
         console.error("Error al realizar la compra, respuesta de la API:", error.response);
-        alert(`Error al realizar la compra: ${error.response.data.message || "Intenta nuevamente."}`);
+        alert(`Error al realizar la compra: ${error.response?.data?.message || "Intenta nuevamente."}`);
       } else {
-        console.error("Error inesperado:", error.message);
+        console.error("Error inesperado:", error);
         alert("Hubo un problema inesperado al realizar la compra.");
       }
     }
@@ -75,27 +75,31 @@ export default function Cart() {
         <div>
           <ul className="space-y-4">
             {cart.map((item, index) => (
-              item ? ( // Aseguramos que 'item' no sea undefined
+              item && ( 
                 <li
                   key={index}
                   className="flex justify-between items-center bg-white shadow-md rounded-md p-4 mb-4"
                 >
                   <div className="flex items-center space-x-4">
-                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md" />
+                    <Image 
+                      src={item.image} 
+                      alt={item.name} 
+                      width={64} 
+                      height={64} 
+                      className="object-cover rounded-md"
+                    />
                     <span className="font-semibold text-gray-800">{item.name}</span>
                   </div>
                   <span className="text-gray-600">${item.price}</span>
                 </li>
-              ) : null // Si 'item' es undefined, no renderiza nada
+              )
             ))}
           </ul>
           
-          {/* Total */}
           <div className="text-right text-xl font-semibold mt-4">
             Total: ${total}
           </div>
 
-          {/* Botón de compra */}
           <div className="text-center">
             <button
               onClick={checkout}

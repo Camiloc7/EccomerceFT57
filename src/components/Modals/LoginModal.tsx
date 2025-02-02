@@ -1,8 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import LoginForm from "@/components/forms/LoginForm";
-import { ReactNode, useEffect } from "react";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 interface LoginModalProps {

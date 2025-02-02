@@ -1,6 +1,9 @@
+"use client";
+
 import React, { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import axios from "axios"; // Importamos axios para la verificación de errores
 
 interface LoginFormProps {
   onSuccess?: () => void;
@@ -21,32 +24,28 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setError(null); // Reseteamos el error en cada intento
+    setError(null); 
 
     try {
       await login(formData.email, formData.password, () => {
         if (onSuccess) {
-          onSuccess(); 
+          onSuccess();
         } else {
-          router.push("/dashboard"); 
+          router.push("/dashboard");
         }
       });
-    } catch (err: any) {
-      setLoading(false); // Detenemos el estado de carga si ocurre un error
+    } catch (err: unknown) { // Cambiamos `any` por `unknown`
+      setLoading(false);
 
-      if (err.response) {
-        // Aquí revisamos el error específico de la respuesta del backend
+      if (axios.isAxiosError(err) && err.response) {
         switch (err.response.status) {
           case 401:
-            // Error de credenciales incorrectas
             setError("Correo electrónico o contraseña incorrectos.");
             break;
           case 404:
-            // Si el usuario no existe
             setError("El usuario no existe.");
             break;
           case 400:
-            // Si hay un error en la solicitud, como campos vacíos
             setError("Por favor, complete todos los campos.");
             break;
           default:
@@ -54,7 +53,6 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
             break;
         }
       } else {
-        // Si el error no tiene una respuesta, significa que puede ser un error de conexión o algo inesperado
         setError("Hubo un problema al conectar con el servidor. Intenta nuevamente.");
       }
     }
