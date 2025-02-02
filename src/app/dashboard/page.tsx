@@ -2,30 +2,25 @@
 
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import Image from "next/image"; // Importamos Image de Next.js
-import { useAuth } from "@/context/AuthContext"; // Importamos el contexto de autenticación
-
+import Image from "next/image"; 
+import { useAuth } from "@/context/AuthContext"; 
 interface IOrder {
   id: number;
   status: string;
   date: string;
-  products: { name: string; price: number; image: string }[]; // Productos en la orden con imagen
+  products: { name: string; price: number; image: string }[]; 
 }
-
 export default function Dashboard() {
-  const { token, isLoggedIn } = useAuth(); // Obtenemos el token y el estado de autenticación
-  const [orders, setOrders] = useState<IOrder[]>([]); // Estado para los pedidos
-  const [loading, setLoading] = useState<boolean>(true); // Estado de carga
-  const [error, setError] = useState<string | null>(null); // Estado para manejar errores
-
-  // Si no está logueado, redirigimos a la página de login
+  const { token, isLoggedIn } = useAuth(); 
+  const [orders, setOrders] = useState<IOrder[]>([]); 
+  const [loading, setLoading] = useState<boolean>(true); 
+  const [error, setError] = useState<string | null>(null); 
   useEffect(() => {
     if (!isLoggedIn) {
       alert("Debes iniciar sesión para ver tus pedidos.");
-      window.location.href = "/login";  // Redirigimos al login
+      window.location.href = "/login";  
       return;
     }
-
     const fetchOrders = async () => {
       try {
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users/orders`, {
@@ -33,13 +28,11 @@ export default function Dashboard() {
             Authorization: token,
           },
         });
-
-        // Verificamos que la respuesta sea un arreglo
         if (Array.isArray(response.data)) {
           if (response.data.length === 0) {
             setError("No tienes pedidos aún.");
           } else {
-            setOrders(response.data); // Guardamos los pedidos en el estado
+            setOrders(response.data); 
           }
         } else {
           setError("No se han encontrado pedidos.");
@@ -48,38 +41,28 @@ export default function Dashboard() {
         console.error("Error al obtener los pedidos:", error);
         setError("Error al obtener los pedidos.");
       } finally {
-        setLoading(false);  // Indicamos que la carga ha terminado
+        setLoading(false); 
       }
     };
 
     fetchOrders();
   }, [isLoggedIn, token]);
-
-  // Si los pedidos están cargando, mostramos un mensaje de carga
   if (loading) {
     return <div className="text-center py-8 text-lg font-semibold">Cargando tus pedidos...</div>;
   }
-
-  // Si hay un error, mostramos el mensaje de error
   if (error) {
     return <div className="text-center py-8 text-red-500 text-lg font-semibold">{error}</div>;
   }
-
-  // Si no hay pedidos, mostramos un mensaje indicándolo
   if (orders.length === 0) {
     return <div className="text-center py-8 text-lg font-semibold">No tienes pedidos aún.</div>;
   }
-
-  // Función para calcular el total del pedido
   const calculateTotal = (products: { price: number }[]) => {
     return products.reduce((acc, product) => acc + product.price, 0);
   };
-
   return (
     <div className="container mx-auto px-4 mt-8">
       <h2 className="text-3xl font-bold mb-8 text-center text-blue-600">Mis Pedidos</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {/* Renderizamos los pedidos como tarjetas */}
         {orders.map((order) => (
           <div
             key={order.id}

@@ -1,14 +1,11 @@
 "use client";
-
 import LoginForm from "@/components/forms/LoginForm";
 import { useEffect } from "react";
 import { createPortal } from "react-dom";
-
 interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
-
 export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   useEffect(() => {
     if (isOpen) {
@@ -16,14 +13,11 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
     } else {
       document.body.style.overflow = ""; 
     }
-
     return () => {
       document.body.style.overflow = ""; 
     };
   }, [isOpen]);
-
   if (!isOpen) return null; 
-
   return createPortal(
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"

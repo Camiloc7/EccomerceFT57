@@ -1,17 +1,13 @@
 "use client"; 
-
 import { Facebook, Instagram, Twitter, Youtube } from "lucide-react";
 import Link from "next/link";
 import { Separator } from "@/components/ui/separator";
 import { useState } from "react";
-
 export default function Footer() {
   const [showInfo, setShowInfo] = useState(false);
-
   return (
     <footer className="bg-gray-900 text-gray-200">
       <div className="container mx-auto px-4 py-6">
-        {/* Redes sociales */}
         <div className="flex justify-center gap-6 mb-4">
           <Link href="https://facebook.com" target="_blank" rel="noopener noreferrer">
             <button className="hover:text-blue-600">
@@ -38,10 +34,7 @@ export default function Footer() {
             </button>
           </Link>
         </div>
-
         <Separator className="my-4 border-gray-700" />
-
-        {/* Botón para pantallas pequeñas */}
         <div className="text-center mb-4 md:hidden">
           <button
             onClick={() => setShowInfo(!showInfo)}
@@ -50,14 +43,11 @@ export default function Footer() {
             {showInfo ? "Ocultar información" : "Más información"}
           </button>
         </div>
-
-        {/* Contenido del footer */}
         <div
           className={`${showInfo ? "block" : "hidden"
             } md:block`} 
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
-            {/* Acerca de */}
             <div>
               <h2 className="text-lg font-bold text-white mb-4">Acerca de nosotros</h2>
               <p className="text-sm">
@@ -65,7 +55,6 @@ export default function Footer() {
                 Encuentra productos de calidad, soporte dedicado y envíos rápidos.
               </p>
             </div>
-
             <div>
               <h2 className="text-lg font-bold text-white mb-4">Links útiles</h2>
               <ul className="space-y-2 text-sm">
@@ -91,8 +80,6 @@ export default function Footer() {
                 </li>
               </ul>
             </div>
-
-            {/* Contacto */}
             <div>
               <h2 className="text-lg font-bold text-white mb-4">Contáctanos</h2>
               <ul className="space-y-2 text-sm">
@@ -109,10 +96,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-
         <Separator className="my-8 border-gray-700" />
-
-        {/* Derechos reservados */}
         <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
           <p className="text-sm">
             © {new Date().getFullYear()} AppleCore. Todos los derechos reservados.

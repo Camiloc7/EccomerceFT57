@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ShoppingCart, User, LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart } from "../context/CartContext";
+import { useCart} from "../context/CartContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +16,8 @@ import { useAuth } from "../context/AuthContext";
 import LoginModal from "@/components/Modals/LoginModal";
 import Modal from "@/components/Modals/Modal";
 import RegisterForm from "@/components/forms/RegisterForm";
-
 export default function Navbar() {
-  const { cart } = useCart(); // Obtienes el carrito
+  const { cart, clearCart } = useCart(); 
   const { isLoggedIn, user, logout } = useAuth();
   const [loadingUser, setLoadingUser] = useState(true);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -32,13 +31,17 @@ export default function Navbar() {
     }
   }, [isLoggedIn]);
 
-  // Calcular el total de productos en el carrito
   const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
+
+  // Modificación aquí: Vaciar el carrito antes de hacer logout
+  const handleLogout = () => {
+    clearCart(); // Vaciar el carrito
+    logout();    // Ejecutar logout
+  };
 
   return (
     <div className="w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-20 items-center justify-between px-4">
-        {/* Menú Hamburguesa - Mobile */}
         <Sheet>
           <SheetTrigger asChild className="absolute left-4 md:hidden">
             <Button variant="ghost" size="icon">
@@ -60,8 +63,6 @@ export default function Navbar() {
             </div>
           </SheetContent>
         </Sheet>
-
-        {/* Logo y Navegación Central */}
         <div className="flex-1 flex justify-center items-center gap-8">
           <Link href="/" className="flex items-center space-x-2">
             <svg className="h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512">
@@ -71,18 +72,15 @@ export default function Navbar() {
               />
             </svg>
           </Link>
-
           <div className="hidden md:flex md:items-center md:gap-6">
             <Link href="/products" className="text-sm font-medium transition-colors hover:text-primary">
               Productos
             </Link>
             <Link href="/dashboard" className="text-sm font-medium transition-colors hover:text-primary">
-            Mis Pedidos
+              Mis Pedidos
             </Link>
           </div>
         </div>
-
-        {/* Right Side Items */}
         <div className="flex items-center gap-4">
           <Link href="/cart">
             <Button variant="ghost" size="icon" className="relative">
@@ -95,7 +93,6 @@ export default function Navbar() {
               <span className="sr-only">Ver carrito</span>
             </Button>
           </Link>
-
           {loadingUser ? (
             <span className="text-sm text-gray-500">Cargando...</span>
           ) : !isLoggedIn ? (
@@ -135,7 +132,8 @@ export default function Navbar() {
                   <Link href="/dashboard">Mis Pedidos</Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
+                {/* Aquí llamamos handleLogout */}
+                <DropdownMenuItem onClick={handleLogout}>
                   <LogOut className="mr-2 h-4 w-4" />
                   Cerrar Sesión
                 </DropdownMenuItem>
@@ -144,8 +142,6 @@ export default function Navbar() {
           )}
         </div>
       </div>
-
-      {/* Modales */}
       <LoginModal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}

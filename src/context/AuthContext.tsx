@@ -25,8 +25,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [token, setToken] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false);
   const router = useRouter();
-
-  // Verificar si hay un token al cargar la aplicación
   useEffect(() => {
     const savedToken = localStorage.getItem('authToken');
     const savedUser = localStorage.getItem('userName');
@@ -36,7 +34,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       setIsLoggedIn(true);
     }
   }, []);
-
   const login = async (email: string, password: string, onSuccess: () => void) => {
     try {
       const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
@@ -44,27 +41,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         password,
       });
       const { token, user } = response.data;
-  
-      // Guardar en localStorage
       localStorage.setItem('authToken', token);
       localStorage.setItem('userName', user.name);
-  
       setToken(token);
       setUser({ name: user.name, email: user.email });
       setIsLoggedIn(true);
-  
-      // Llamar al callback onSuccess cuando el login sea exitoso
       onSuccess(); 
-  
     } catch (error) {
       console.error('Error al iniciar sesión:', error);
       throw new Error('Error al iniciar sesión');
     }
   };
-  
-
-  // Función para cerrar sesión
-  const logout = () => {
+    const logout = () => {
     localStorage.removeItem('authToken');
     localStorage.removeItem('userName');
     setToken(null);
@@ -72,15 +60,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setIsLoggedIn(false);
     router.push('/login');
   };
-
   return (
     <AuthContext.Provider value={{ user, token, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
 };
-
-// Custom hook para usar el contexto
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {

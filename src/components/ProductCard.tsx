@@ -1,7 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import Image from "next/image";  // Importa Image desde next/image
-
+import Image from "next/image";  
 interface IProduct {
   name: string;
   price: number;
@@ -10,7 +9,6 @@ interface IProduct {
   categoryId: number;
   stock: number;
 }
-
 export default function ProductCard({ product }: { product: IProduct }) {
   return (
     <div className="border rounded-lg shadow-md p-4 hover:shadow-lg transition">

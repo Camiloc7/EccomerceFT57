@@ -1,8 +1,6 @@
 "use client";
-
 import React, { createContext, useContext, useState, useEffect, ReactNode } from "react";
 
-// Definir la estructura de un producto en el carrito
 interface CartItem {
   id: number;
   name: string;
@@ -11,21 +9,19 @@ interface CartItem {
   image: string;
 }
 
-// Definir la estructura del contexto
 interface CartContextProps {
   cart: CartItem[];
-  addToCart: (item: CartItem) => void;
+  addToCart: (item: CartItem) => Promise<boolean>;  // Cambié a Promesa
+  removeFromCart: (id: number) => void;
   clearCart: () => void;
   total: number;
 }
 
-// Crear el contexto con el tipo adecuado
 const CartContext = createContext<CartContextProps | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
 
-  // Cargar carrito desde localStorage
   useEffect(() => {
     const storedCart = localStorage.getItem("cart");
     if (storedCart) {
@@ -33,28 +29,28 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
 
-  // Guardar carrito en localStorage cuando cambia
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const stringifiedCart = JSON.stringify(cart); // Extraemos la conversión JSON fuera del useEffect
-      localStorage.setItem("cart", stringifiedCart);
+      localStorage.setItem("cart", JSON.stringify(cart));
     }
-  }, [cart]); // Ahora solo `cart` es la dependencia
+  }, [cart]);
 
-  const addToCart = (item: CartItem) => {
-    setCart((prevCart) => {
-      const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
-
+  const addToCart = async (item: CartItem) => {
+    try {
+      const existingItem = cart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
-        return prevCart.map((cartItem) =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
-            : cartItem
-        );
-      } else {
-        return [...prevCart, { ...item, quantity: item.quantity }];
+        return false; // Producto ya está en el carrito
       }
-    });
+      setCart((prevCart) => [...prevCart, { ...item, quantity: 1 }]);
+      return true; // Producto añadido correctamente
+    } catch (error) {
+      console.error("Error al añadir al carrito:", error);
+      return false;
+    }
+  };
+
+  const removeFromCart = (id: number) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
   const clearCart = () => {
@@ -65,13 +61,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <CartContext.Provider value={{ cart, addToCart, clearCart, total }}>
+    <CartContext.Provider value={{ cart, addToCart, removeFromCart, clearCart, total }}>
       {children}
     </CartContext.Provider>
   );
 };
 
-// Hook personalizado para usar el contexto
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) {

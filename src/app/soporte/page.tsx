@@ -6,13 +6,11 @@ export default function Soporte() {
           <p className="text-lg md:text-xl mb-6">
               ¿Tienes alguna pregunta o problema? ¡Estamos aquí para ayudarte!
           </p>
-
           <section className="bg-white text-gray-800 rounded-lg shadow-xl p-8 mt-8 max-w-3xl mx-auto">
               <h2 className="text-2xl font-semibold text-gray-700">Contáctanos</h2>
               <p className="mt-4 text-lg text-gray-600">
                   Si necesitas asistencia, por favor llena el formulario a continuación y nos pondremos en contacto contigo lo más pronto posible.
               </p>
-
               <form className="mt-6">
                   <div className="mb-4">
                       <label htmlFor="name" className="block text-left text-gray-700 font-semibold">Tu Nombre</label>
@@ -25,7 +23,6 @@ export default function Soporte() {
                           required
                       />
                   </div>
-
                   <div className="mb-4">
                       <label htmlFor="email" className="block text-left text-gray-700 font-semibold">Correo Electrónico</label>
                       <input
@@ -37,30 +34,25 @@ export default function Soporte() {
                           required
                       />
                   </div>
-
                   <div className="mb-4">
                       <label htmlFor="message" className="block text-left text-gray-700 font-semibold">Mensaje</label>
                       <textarea
                           id="message"
                           name="message"
-                          
                           className="w-full p-3 mt-2 border border-gray-300 rounded-lg"
                           placeholder="Escribe tu mensaje"
                           required
                       ></textarea>
                   </div>
-
                   <button type="submit" className="bg-blue-600 text-white py-3 px-6 rounded-md font-semibold hover:bg-blue-700 transition-all duration-300">
                       Enviar Mensaje
                   </button>
               </form>
-
               <h2 className="text-2xl font-semibold text-gray-700 mt-12">Preguntas Frecuentes</h2>
               <div className="mt-6">
                   <p className="text-lg text-gray-600 mb-4">
                       Aquí te dejamos algunas preguntas frecuentes que pueden ser útiles antes de contactar al soporte:
                   </p>
-
                   <div className="text-left space-y-4">
                       <div className="bg-gray-100 p-4 rounded-lg">
                           <h3 className="font-semibold text-gray-700">¿Cómo puedo hacer un pedido?</h3>

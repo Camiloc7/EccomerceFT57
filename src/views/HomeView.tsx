@@ -1,17 +1,13 @@
 "use client";
-
 import React, { useState } from "react";
 import HeroBanner from "@/components/HeroBanner";
 import ProductGrid from "@/components/ProductGrid";
 import SearchBar from "@/components/SearchBar";
-
 export default function HomeViews() {
   const [filter, setFilter] = useState("");
-
   const handleSearch = (query: string) => {
     setFilter(query.toLowerCase()); 
   };
-
   return (
     <div>
       <HeroBanner />

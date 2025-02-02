@@ -3,12 +3,10 @@ import { AuthProvider } from "../context/AuthContext";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "./globals.css";
-
 export const metadata = {
   title: "AppleCore",
   description: "AppleCore",
 };
-
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">

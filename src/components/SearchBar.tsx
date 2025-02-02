@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-
 export default function SearchBar({ onSearch }: { onSearch: (query: string) => void }) {
   const [query, setQuery] = useState("");
-
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
     onSearch(e.target.value);
   };
-
   return (
     <div className="mt-8 mb-4">
       <input
