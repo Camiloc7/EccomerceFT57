@@ -1,4 +1,3 @@
-// app/soporte/page.tsx
 export default function Soporte() {
   return (
       <main className="bg-gray-50 text-gray-800 py-16 px-4 text-center">

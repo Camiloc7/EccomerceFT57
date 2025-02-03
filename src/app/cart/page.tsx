@@ -34,19 +34,19 @@ export default function Cart() {
   const checkout = async () => {
     if (!isLoggedIn) {
       showAlert("Debes iniciar sesión para proceder con la compra.");
-      router.push("/login");
+      router.push("/login"); 
       return;
     }
-
+  
     const uniqueProducts = Array.from(new Set(cart.map((item) => item.id)))
       .map((id) => cart.find((item) => item.id === id));
-
+  
     const orderData = {
       products: uniqueProducts
         .map((item) => item?.id)
         .filter((id): id is number => id !== undefined), 
     };
-
+  
     try {
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/orders`,
@@ -57,8 +57,13 @@ export default function Cart() {
           },
         }
       );
+  
       showAlert("Orden enviada con éxito.");
-      clearCart();
+      clearCart(); 
+  
+      setTimeout(() => {
+        router.push("/dashboard");
+      }, 1500); 
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         console.error("Error al realizar la compra, respuesta de la API:", error.response);
@@ -69,6 +74,7 @@ export default function Cart() {
       }
     }
   };
+  
 
   return (
     <div className="container mx-auto px-4 mt-8">
@@ -102,7 +108,7 @@ export default function Cart() {
                     <span className="text-gray-600">${item.price}</span>
                     <button
                       onClick={() => removeFromCart(item.id)}
-                      className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
+                      className="bg-white-500 text-white px-3 py-1 rounded-md hover:bg-red-200 transition"
                     >
                       ❌
                     </button>

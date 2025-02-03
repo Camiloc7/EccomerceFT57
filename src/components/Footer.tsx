@@ -59,7 +59,7 @@ export default function Footer() {
               <h2 className="text-lg font-bold text-white mb-4">Links útiles</h2>
               <ul className="space-y-2 text-sm">
                 <div>
-                  <Link href="/como-comprar" className="hover:underline">
+                  <Link href="/shop-guide" className="hover:underline">
                     Cómo comprar
                   </Link>
                 </div>
@@ -69,12 +69,12 @@ export default function Footer() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/politica-privacidad" className="hover:underline">
+                  <Link href="/privacy" className="hover:underline">
                     Política de privacidad
                   </Link>
                 </li>
                 <li>
-                  <Link href="/soporte" className="hover:underline">
+                  <Link href="/suport" className="hover:underline">
                     Soporte
                   </Link>
                 </li>

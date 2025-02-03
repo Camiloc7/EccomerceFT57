@@ -128,7 +128,7 @@ export default function ProductDetail() {
               onClick={handleAddToCart}
               className="bg-indigo-500 text-white py-2 px-4 rounded-md hover:bg-indigo-600 transition"
             >
-              Añadir al carrito
+             Comprar
             </button>
             <button
               onClick={() => router.push("/products")}

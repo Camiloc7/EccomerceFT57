@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ShoppingCart, User, LogOut, Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useCart} from "../context/CartContext";
+import { useCart } from "../context/CartContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,9 +13,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useAuth } from "../context/AuthContext";
-import LoginModal from "@/components/Modals/LoginModal";
-import Modal from "@/components/Modals/Modal";
-import RegisterForm from "@/components/forms/RegisterForm";
+import Modal from "@/components/Modals/Modal"; 
+import RegisterForm from "@/components/forms/RegisterForm"; 
+import LoginForm from "@/components/forms/LoginForm"; 
 export default function Navbar() {
   const { cart, clearCart } = useCart(); 
   const { isLoggedIn, user, logout } = useAuth();
@@ -33,10 +33,9 @@ export default function Navbar() {
 
   const totalItemsInCart = cart.reduce((acc, item) => acc + item.quantity, 0);
 
-  // Modificación aquí: Vaciar el carrito antes de hacer logout
   const handleLogout = () => {
-    clearCart(); // Vaciar el carrito
-    logout();    // Ejecutar logout
+    clearCart(); 
+    logout();   
   };
 
   return (
@@ -142,10 +141,15 @@ export default function Navbar() {
           )}
         </div>
       </div>
-      <LoginModal
+
+      {/* Modales */}
+      <Modal
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
-      />
+      >
+        <LoginForm onSuccess={() => setIsLoginModalOpen(false)} />
+      </Modal>
+      
       <Modal
         isOpen={isRegisterModalOpen}
         onClose={() => setIsRegisterModalOpen(false)}

@@ -11,7 +11,7 @@ interface CartItem {
 
 interface CartContextProps {
   cart: CartItem[];
-  addToCart: (item: CartItem) => Promise<boolean>;  // Cambié a Promesa
+  addToCart: (item: CartItem) => Promise<boolean>;  
   removeFromCart: (id: number) => void;
   clearCart: () => void;
   total: number;
@@ -39,10 +39,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     try {
       const existingItem = cart.find((cartItem) => cartItem.id === item.id);
       if (existingItem) {
-        return false; // Producto ya está en el carrito
+        return false; 
       }
       setCart((prevCart) => [...prevCart, { ...item, quantity: 1 }]);
-      return true; // Producto añadido correctamente
+      return true; 
     } catch (error) {
       console.error("Error al añadir al carrito:", error);
       return false;
