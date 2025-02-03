@@ -5,7 +5,6 @@ import axios from "axios";
 import Image from "next/image";
 import { useAuth } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
-import AlertModal from "@/components/Modals/AlertModal";
 
 interface IOrder {
   id: number;

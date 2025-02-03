@@ -5,11 +5,13 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/Modals/Modal"; 
 import RegisterForm from "@/components/forms/RegisterForm"; 
+import { FiEye, FiEyeOff } from "react-icons/fi"; 
+
 interface LoginFormProps {
   onSuccess?: () => void;
-  onRegisterClick?: () => void;
 }
-export default function LoginForm({ onSuccess, onRegisterClick }: LoginFormProps) {
+
+export default function LoginForm({ onSuccess }: LoginFormProps) {
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -21,9 +23,11 @@ export default function LoginForm({ onSuccess, onRegisterClick }: LoginFormProps
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   }, []);
+  
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -62,6 +66,7 @@ export default function LoginForm({ onSuccess, onRegisterClick }: LoginFormProps
       }
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-96">
       <h2 className="text-2xl font-semibold text-center mb-6">Iniciar Sesión</h2>
@@ -94,6 +99,7 @@ export default function LoginForm({ onSuccess, onRegisterClick }: LoginFormProps
           onClick={togglePasswordVisibility}
           className="absolute inset-y-0 right-0 pr-3 flex items-center"
         >
+          {showPassword ? <FiEyeOff /> : <FiEye />}
         </button>
       </div>
       {formData.password && !/^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/.test(formData.password) && (

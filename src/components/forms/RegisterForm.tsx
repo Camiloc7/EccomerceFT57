@@ -3,10 +3,12 @@ import axios, { AxiosError } from "axios";
 import { Button } from "@/components/ui/button";
 import Modal from "@/components/Modals/Modal";
 import LoginForm from "@/components/forms/LoginForm";
+
 interface RegisterFormProps {
   onSuccess?: () => void;
   onClose?: () => void;
 }
+
 export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) {
   const [formData, setFormData] = useState({
     name: "",
@@ -18,37 +20,33 @@ export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) 
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
-  const passwordPattern =
-    /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/; 
-  const phonePattern = /^[0-9]{1,12}$/; 
-  const addressPattern = /^(?!.*(asdfg)).+$/; 
+  const passwordPattern = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,}$/;
+  const phonePattern = /^[0-9]{1,12}$/;
+  const addressPattern = /^(?!.*(asdfg)).+$/;
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const phoneValue = e.target.value;
     if (/[^0-9]/.test(phoneValue)) {
-      return; 
+      return;
     }
     setFormData({ ...formData, phone: phoneValue });
   };
 
-
-  const [isClosing, setIsClosing] = useState(false);
-
   const openLoginModal = () => {
     if (onClose) {
-      setIsClosing(true); 
       onClose();
-      
       setTimeout(() => {
         setIsLoginModalOpen(true);
-        setIsClosing(false);
-      }, 300); 
+      }, 300);
     } else {
       setIsLoginModalOpen(true);
     }
   };
+
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
   };
@@ -76,7 +74,7 @@ export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) 
     }
 
     try {
-      const response = await axios.post(
+      await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
         formData
       );
@@ -156,7 +154,7 @@ export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) 
             name="phone"
             id="phone"
             value={formData.phone}
-            onChange={handlePhoneChange}  
+            onChange={handlePhoneChange}
             required
             className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
           />
@@ -176,7 +174,6 @@ export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) 
             variant="ghost"
             size="sm"
             onClick={openLoginModal}
-
             className="text-indigo-600 hover:text-indigo-700 underline"
           >
             Inicia sesión aquí
