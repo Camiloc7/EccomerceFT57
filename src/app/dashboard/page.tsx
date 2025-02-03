@@ -18,8 +18,6 @@ export default function Dashboard() {
   const router = useRouter();
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [showModal, setShowModal] = useState<boolean>(false);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -34,16 +32,16 @@ export default function Dashboard() {
 
           if (Array.isArray(response.data)) {
             if (response.data.length === 0) {
-              setError("No tienes pedidos aún.");
+              // Error cuando no hay pedidos
             } else {
               setOrders(response.data);
             }
           } else {
-            setError("No se han encontrado pedidos.");
+            // Error cuando no se encuentran pedidos
           }
         } catch (error) {
           console.error("Error al obtener los pedidos:", error);
-          setError("Error al obtener los pedidos.");
+          // Puedes manejar el error aquí si lo deseas
         } finally {
           setLoading(false);
         }
@@ -54,6 +52,7 @@ export default function Dashboard() {
       setLoading(false); 
     }
   }, [isLoggedIn, token]);
+
   if (!isLoggedIn) {
     return (
       <div className="text-center py-8 text-red-500 text-lg font-semibold">
@@ -67,6 +66,7 @@ export default function Dashboard() {
       </div>
     );
   }
+
   if (loading) {
     return (
       <div className="text-center py-8 text-lg font-semibold">
@@ -74,6 +74,7 @@ export default function Dashboard() {
       </div>
     );
   }
+
   if (orders.length === 0) {
     return (
       <div className="text-center py-8 text-red-500 text-lg font-semibold">
@@ -91,6 +92,7 @@ export default function Dashboard() {
       </div>
     );
   }
+
   return (
     <div className="container mx-auto px-4 mt-8">
       <h2 className="text-3xl font-bold mb-8 text-center text-blue-600">
