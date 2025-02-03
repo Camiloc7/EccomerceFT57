@@ -32,10 +32,14 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
-
+  
     try {
       await login(formData.email, formData.password, () => {
-        onSuccess ? onSuccess() : router.push("/dashboard");
+        if (onSuccess) {
+          onSuccess();
+        } else {
+          router.push("/dashboard");
+        }
       });
     } catch (err: unknown) {
       setLoading(false);
@@ -66,6 +70,7 @@ export default function LoginForm({ onSuccess }: LoginFormProps) {
       }
     }
   };
+  
 
   return (
     <form onSubmit={handleSubmit} className="bg-white p-8 rounded-lg shadow-md w-96">

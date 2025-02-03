@@ -55,30 +55,36 @@ export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) 
     e.preventDefault();
     setLoading(true);
     setError(null);
+  
+    // Validaciones
     if (!passwordPattern.test(formData.password)) {
       setError("La contraseña debe tener al menos 8 caracteres, una mayúscula y un número.");
       setLoading(false);
       return;
     }
-
+  
     if (!phonePattern.test(formData.phone)) {
       setError("El número de teléfono solo puede tener hasta 12 dígitos.");
       setLoading(false);
       return;
     }
-
+  
     if (!addressPattern.test(formData.address)) {
       setError("La dirección es inválida.");
       setLoading(false);
       return;
     }
-
+  
     try {
+      // Enviar solicitud de registro
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/users/register`,
         formData
       );
-      onSuccess && onSuccess();
+      // Verificar si onSuccess existe y llamarla
+      if (onSuccess) {
+        onSuccess();
+      }
     } catch (error: unknown) {
       setLoading(false);
       if (error instanceof AxiosError) {
@@ -93,6 +99,7 @@ export default function RegisterForm({ onSuccess, onClose }: RegisterFormProps) 
       }
     }
   };
+  
 
   return (
     <div className="bg-white p-8 rounded-lg shadow-md w-96">
